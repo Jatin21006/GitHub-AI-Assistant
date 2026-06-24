@@ -1,0 +1,21 @@
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# AI / LangChain (upcoming steps)
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-text-splitters>=0.3.0
+langchain-google-genai>=2.0.0
+langchain-community>=0.3.0
+
+# Vector store (upcoming steps)
+faiss-cpu>=1.9.0
+
+# Repository processing
+GitPython>=3.1.43
+
+# Configuration & validation
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
