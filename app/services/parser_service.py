@@ -25,6 +25,11 @@ CHUNK_SIZE = 1500
 CHUNK_OVERLAP = 200
 
 
+class ParserError(Exception):
+    """Raised when parsing or scanning operations fail."""
+
+
+
 def scan_repository(repo_path: Path, repository_name: str) -> tuple[list[Path], int]:
     """
     Recursively scan a repository for supported source files.
@@ -38,12 +43,12 @@ def scan_repository(repo_path: Path, repository_name: str) -> tuple[list[Path], 
     """
     repo_path = repo_path.resolve()
     if not repo_path.is_dir():
-        raise ValueError(f"Repository path does not exist: {repo_path}")
+        raise ParserError(f"Repository path does not exist or is not a directory: {repo_path}")
+
+    logger.info("Scanning repository '%s' at '%s'", repository_name, repo_path)
 
     matched_files: list[Path] = []
     files_skipped = 0
-
-    logger.info("Scanning repository '%s' at %s", repository_name, repo_path)
 
     for root, dirnames, filenames in os.walk(repo_path):
         dirnames[:] = [name for name in dirnames if name not in _ignored_dirnames_set()]

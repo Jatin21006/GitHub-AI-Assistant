@@ -3,6 +3,26 @@
 from pydantic import BaseModel, Field
 
 
+class CloneRequest(BaseModel):
+    """Request body for cloning a repository without full indexing."""
+
+    github_url: str = Field(
+        ...,
+        description="GitHub repository URL (HTTPS or owner/repo shorthand)",
+        examples=["https://github.com/octocat/Hello-World"],
+    )
+
+
+class IndexRequest(BaseModel):
+    """Request body for parsing and indexing an already cloned repository."""
+
+    repository_name: str = Field(
+        ...,
+        description="Repository in owner/name format",
+        examples=["octocat/Hello-World"],
+    )
+
+
 class RepositoryIngestRequest(BaseModel):
     """Request body for ingesting a GitHub repository."""
 
@@ -37,6 +57,17 @@ class Citation(BaseModel):
 class QueryRequest(BaseModel):
     """Request body for a repository Q&A query."""
 
+    question: str = Field(..., min_length=1, description="Natural-language question")
+
+
+class RepositoryQueryRequest(BaseModel):
+    """Request body for a repository Q&A query including repository name."""
+
+    repository_name: str = Field(
+        ...,
+        description="Repository in owner/name format",
+        examples=["octocat/Hello-World"],
+    )
     question: str = Field(..., min_length=1, description="Natural-language question")
 
 
@@ -81,3 +112,11 @@ class RetrievalResult(BaseModel):
     file_name: str
     language: str
     extension: str
+
+
+class RepositoryStatusResponse(BaseModel):
+    """Status of a repository's clone and indexing process."""
+
+    repository_name: str = Field(..., description="Repository in owner/name format")
+    is_cloned: bool = Field(..., description="True if the repository exists on disk")
+    is_indexed: bool = Field(..., description="True if the FAISS index exists")
